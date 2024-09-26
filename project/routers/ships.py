@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel
+from project.schemas.ships import ShipSchema
 
 router = APIRouter(
     prefix='/ships',
@@ -7,12 +7,8 @@ router = APIRouter(
     )
 
 
-class ShipSchema(BaseModel):
-    name: str
-#     mozna tez inne nazwy zmiennych podawac dalej + typy
-
-
 ships = []
+
 
 @router.post('/', status_code=201)
 async def add(ship: ShipSchema):
