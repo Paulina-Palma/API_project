@@ -1,31 +1,18 @@
 from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel
+from project.schemas.bookings import BookingSchema
 
 router = APIRouter(
-    prefix="/booking",
-    tags=["booking"],
-    )
-
-class BookingSchema(BaseModel):
-    booking_id = int
-    date_start = int
-    date_end = int
-    customer_id = int
-    ship_id = int
+    prefix="/bookings",
+    tags=["bookings"]
+)
 
 
 bookings = []
 
-def get_booking(booking_id: int):
-    try: 
-        return bookings[booking_id]
-    except IndexError:
-        raise HTTPException(status_code=404, detail="Booking not found")
-
 
 @router.post("/", status_code=201)
 async def add(booking: BookingSchema):
-    booking.append(booking)
+    bookings.append(booking)
     return bookings
 
 
@@ -51,3 +38,10 @@ async def update(booking_id: int, booking: BookingSchema):
     get_booking(booking_id)
     bookings[booking_id] = booking
     return bookings
+
+
+def get_booking(booking_id: int):
+    try:
+        return bookings[booking_id]
+    except IndexError:
+        raise HTTPException(status_code=404, detail="Booking not found")
