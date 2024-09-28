@@ -8,3 +8,6 @@ class ShipSchema(BaseModel):
     distance: PositiveFloat
     cost_per_day: PositiveFloat
 
+    class Config:
+        # orm_mode = True
+        from_attributes = True
