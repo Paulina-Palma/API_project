@@ -1,7 +1,5 @@
 from fastapi import FastAPI
-from project.routers import ships
-from project.routers import bookings
-from project.routers import customers
+from project.routers import bookings, customers, ships
 
 app = FastAPI()
 app.include_router(ships.router)
