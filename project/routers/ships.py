@@ -10,7 +10,7 @@ router = APIRouter(
     tags=['ships']
 )
 
-
+# będzie do usunięcia
 ships = []
 
 
@@ -34,6 +34,11 @@ async def index(page: int = 0):
 @router.get('/{ship_id}')
 async def get(ship_id: int) -> ShipSchema:
     return get_ship(ship_id)
+
+
+@router.get('/(ship_id}')
+async def get(ship_id: int, db: Session = Depends(get_db)) -> ShipSchema:
+    return fetch_one(db=db, ship_id=ship_id)
 
 
 @router.delete('/{ship_id}')
