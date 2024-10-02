@@ -1,47 +1,63 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
+from sqlalchemy.orm import Session
+from project.database import get_db
 from project.schemas.customers import CustomerSchema
+from project.repositories.customers import create, fetch_one, fetch_all, update_by_id, delete_by_id
 
 router = APIRouter(
     prefix='/customers',
     tags=['customers']
-    )
-
-
-customers = []
+)
 
 
 @router.post("/", status_code=201)
-async def add(customer: CustomerSchema):
-    customers.append(customer)
-    return customers
+async def add(customer: CustomerSchema, db: Session = Depends(get_db)):
+    """Create a new customer."""
+    new_customer = create(
+        db=db,
+        name=customer.name,
+        email=customer.email,
+        phone=customer.phone,
+        document_number=customer.document_number
+    )
+    return new_customer
 
 
 @router.get("/")
-async def index(page: int = 0):
+async def index(db: Session = Depends(get_db)):
+    """Fetch all customers."""
+    customers = fetch_all(db=db)
     return customers
 
 
-@router.get("/{customer_id}")
-async def get(customer_id: int):
-    return get_customer(customer_id)
+@router.get("/{customer_id}", response_model=CustomerSchema)
+async def get(customer_id: int, db: Session = Depends(get_db)):
+    """Fetch a single customer by ID."""
+    customer = fetch_one(db=db, customer_id=customer_id)
+    if not customer:
+        raise HTTPException(status_code=404, detail="Customer not found")
+    return customer
 
 
-@router.delete("/{customer_id}")
-async def delete(customer_id: int):
-    get_customer(customer_id)
-    del customers[customer_id]
-    return customers
+@router.delete("/{customer_id}", status_code=204)
+async def delete(customer_id: int, db: Session = Depends(get_db)):
+    """Delete a customer by ID."""
+    customer = delete_by_id(db=db, customer_id=customer_id)
+    if not customer:
+        raise HTTPException(status_code=404, detail="Customer not found")
+    return {"message": "Customer deleted successfully"}
 
 
-@router.put("/{customer_id}")
-async def update(customer_id: int, customer: CustomerSchema):
-    get_customer(customer_id)
-    customers[customer_id] = customer
-    return customers
-
-
-def get_customer(customer_id: int):
-    try:
-        return customers[customer_id]
-    except IndexError:
-        raise HTTPException(status_code=404, detail="customer not found")
+@router.put("/{customer_id}", response_model=CustomerSchema)
+async def update(customer_id: int, customer: CustomerSchema, db: Session = Depends(get_db)):
+    """Update a customer by ID."""
+    updated_customer = update_by_id(
+        db=db,
+        customer_id=customer_id,
+        name=customer.name,
+        address=customer.address,
+        document_number=customer.document_number
+    )
+    if not updated_customer:
+        raise HTTPException(status_code=404, detail="Customer not found")
+    return updated_customer
