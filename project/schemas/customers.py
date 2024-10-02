@@ -4,8 +4,11 @@ from string import ascii_uppercase
 
 
 class CustomerSchema(BaseModel):
+    id: Optional[PositiveInt]
     name: str = Field(min_length=3, max_length=100)
     address: str = Field(min_length=3, max_length=100)
+    phone: str
+    email: str
     document_number: str = Field(min_length=9, max_length=9)
 
     class Config:
