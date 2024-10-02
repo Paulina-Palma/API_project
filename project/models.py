@@ -19,14 +19,16 @@ class Booking(Base):
     __tablename__ = "bookings"
 
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"))
-    ship_id = Column(Integer, ForeignKey("ships.id"))
-    start_date = Column(Date)
-    end_date = Column(Date)
+    # customer_id = Column(Integer, ForeignKey("customer.id"))
+    # spaceship_id = Column(Integer, ForeignKey("ships.id"))
+    customer_id = Column(Integer)
+    spaceship_id = Column(Integer)
+    date_start = Column(Date)
+    date_end = Column(Date)
     total_cost = Column(Float)
 
-    user = relationship("User", back_populates="bookings")
-    ship = relationship("Ship", back_populates="bookings")
+    # customer = relationship("Customer", back_populates="customers")
+    # ship = relationship("Ship", back_populates="ships")
 
 
 class Customer(Base):
@@ -34,6 +36,7 @@ class Customer(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True)
+    address = Column(String, index=True)
+    phone = Column(String, unique=True, index=True)
     email = Column(String, unique=True, index=True)
-    phone = Column(String)
     document_number = Column(String, unique=True, index=True)

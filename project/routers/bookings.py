@@ -15,10 +15,10 @@ async def add(booking: BookingSchema, db: Session = Depends(get_db)):
     """Create a new booking."""
     new_booking = create(
         db=db,
-        user_id=booking.user_id,
-        ship_id=booking.ship_id,
-        start_date=booking.start_date,
-        end_date=booking.end_date,
+        customer_id=booking.customer_id,
+        spaceship_id=booking.spaceship_id,
+        date_start=booking.date_start,
+        date_end=booking.date_end,
         total_cost=booking.total_cost
     )
     return new_booking
