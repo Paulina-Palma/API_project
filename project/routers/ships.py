@@ -1,18 +1,28 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
+from sqlalchemy.orm import Session
+
+from project.database import get_db
 from project.schemas.ships import ShipSchema
+from project.repositories.ships import create
 
 router = APIRouter(
     prefix='/ships',
     tags=['ships']
-    )
+)
 
 
 ships = []
 
 
 @router.post('/', status_code=201)
-async def add(ship: ShipSchema):
-    ships.append(ship)
+async def add(ship: ShipSchema, db: Session = Depends(get_db)):
+    create(
+        db=db,
+        name=ship.name,
+        max_speed=ship.max_speed,
+        distance=ship.distance,
+        cost_per_day=ship.cost_per_day
+    )
     return ships
 
 
