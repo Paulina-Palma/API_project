@@ -1,4 +1,4 @@
-# FastAPI Ship Booking API
+# 🚀FastAPI Ship Booking API
 
 This project is a RESTful API built using  **FastAPI**  for managing ships, customers, and bookings. It allows users to create and manage bookings for different ships and customers. The project uses  **PostgreSQL**  for data persistence and  **SQLAlchemy ORM**  for database interactions. The project is likely containerized using  **Docker**  for easier deployment and scalability.
 
