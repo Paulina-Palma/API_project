@@ -31,10 +31,10 @@ This project is a RESTful API built using  **FastAPI**  for managing ships, cust
  │          ├── `customers.py`       # API routes for Customers   
  │          ├── `ships.py`           # API routes for Ships   
  │          └── `bookings.py`        # API routes for Bookings    
- ├── `tests/`                     # Test cases for the API   
- ├── `alembic/`                   # Alembic for migrations (if applicable)  
- ├── `Dockerfile`                 # Docker setup for containerizing the app   
- └── `README.md`                  # Project documentation   
+├── `tests/`                     # Test cases for the API   
+├── `alembic/`                   # Alembic for migrations (if applicable)  
+├── `Dockerfile`                 # Docker setup for containerizing the app   
+└── `README.md`                  # Project documentation   
 
 
 
