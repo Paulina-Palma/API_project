@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
 from project.database import get_db
-from project.schemas.customers import CustomerResponseSchema, CustomerCreateSchema
+from project.schemas.customers import CustomerSchema, CustomerCreateSchema
 from project.repositories.customers import create, fetch_one, fetch_all, update_by_id, delete_by_id
 
 router = APIRouter(
@@ -31,7 +31,7 @@ async def index(db: Session = Depends(get_db)):
     return customers
 
 
-@router.get("/{customer_id}", response_model=CustomerResponseSchema)
+@router.get("/{customer_id}", response_model=CustomerSchema)
 async def get(customer_id: int, db: Session = Depends(get_db)):
     """Fetch a single customer by ID."""
     customer = fetch_one(db=db, customer_id=customer_id)
@@ -49,7 +49,7 @@ async def delete(customer_id: int, db: Session = Depends(get_db)):
     return {"message": "Customer deleted successfully"}
 
 
-@router.put("/{customer_id}", response_model=CustomerResponseSchema)
+@router.put("/{customer_id}", response_model=CustomerSchema)
 async def update(customer_id: int, customer: CustomerCreateSchema, db: Session = Depends(get_db)):
     """Update a customer by ID."""
     updated_customer = update_by_id(

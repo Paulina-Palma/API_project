@@ -13,7 +13,7 @@ class BookingCreateSchema(BaseModel):
         from_attributes = True
 
 
-class BookingResponseSchema(BaseModel):
+class BookingSchema(BaseModel):
     id: PositiveInt
     spaceship_id: PositiveInt
     customer_id: PositiveInt
