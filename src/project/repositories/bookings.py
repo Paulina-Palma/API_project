@@ -1,3 +1,4 @@
+from datetime import date
 from sqlalchemy.orm import Session
 from project.models import Booking
 
@@ -40,4 +41,22 @@ def delete_by_id(db: Session, booking_id: int):
         return None
     db.delete(booking)
     db.commit()
+    return booking
+
+
+def update_booking(db: Session, filter_field: str, filter_value, update_data: dict):
+    # Use filter_by with a dictionary for more straightforward filtering
+    booking_query = db.query(Booking).filter_by(**{filter_field: filter_value})
+    booking = booking_query.first()
+
+    if not booking:
+        return None
+
+    # Direct dictionary update for the booking's attributes
+    for key, value in update_data.items():
+        if hasattr(booking, key):
+            booking.__dict__[key] = value
+
+    db.commit()
+    db.refresh(booking)
     return booking

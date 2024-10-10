@@ -17,7 +17,7 @@ def fetch_one(db: Session, ship_id: int):
     # return db.query(Ship).filter(Ship.id == ship_id).first()
 
 
-def fetch_all(db: Session, ship_id: int):
+def fetch_all(db: Session):
     """Fetches all ships from the database."""
     return db.query(Ship).all()
 

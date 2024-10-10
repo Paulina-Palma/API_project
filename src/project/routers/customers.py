@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
 from project.database import get_db
-from project.schemas.customers import CustomerSchema
+from project.schemas.customers import CustomerSchema, CustomerCreateSchema
 from project.repositories.customers import create, fetch_one, fetch_all, update_by_id, delete_by_id
 
 router = APIRouter(
@@ -11,11 +11,12 @@ router = APIRouter(
 
 
 @router.post("/", status_code=201)
-async def add(customer: CustomerSchema, db: Session = Depends(get_db)):
+async def add(customer: CustomerCreateSchema, db: Session = Depends(get_db)):
     """Create a new customer."""
     new_customer = create(
         db=db,
         name=customer.name,
+        address=customer.address,
         email=customer.email,
         phone=customer.phone,
         document_number=customer.document_number
@@ -49,7 +50,7 @@ async def delete(customer_id: int, db: Session = Depends(get_db)):
 
 
 @router.put("/{customer_id}", response_model=CustomerSchema)
-async def update(customer_id: int, customer: CustomerSchema, db: Session = Depends(get_db)):
+async def update(customer_id: int, customer: CustomerCreateSchema, db: Session = Depends(get_db)):
     """Update a customer by ID."""
     updated_customer = update_by_id(
         db=db,
@@ -61,3 +62,11 @@ async def update(customer_id: int, customer: CustomerSchema, db: Session = Depen
     if not updated_customer:
         raise HTTPException(status_code=404, detail="Customer not found")
     return updated_customer
+
+# @router.put("/{customer_id}", response_model=CustomerSchema)
+# async def update(customer_id: int, customer: CustomerCreateSchema, db: Session = Depends(get_db)):
+#     """Update a customer by ID."""
+#     updated_customer = update_by_id(db=db, customer_id=customer_id, **customer.dict())
+#     if not updated_customer:
+#         raise HTTPException(status_code=404, detail="Customer not found")
+#     return updated_customer

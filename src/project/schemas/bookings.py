@@ -1,10 +1,20 @@
 from datetime import datetime
 from pydantic import BaseModel, PositiveInt, PositiveFloat, model_validator
-from typing import Optional
+
+
+class BookingCreateSchema(BaseModel):
+    customer_id: int
+    spaceship_id: int
+    date_start: datetime
+    date_end: datetime
+    total_cost: float
+
+    class Config:
+        from_attributes = True
 
 
 class BookingSchema(BaseModel):
-    id: Optional[PositiveInt]
+    id: PositiveInt
     spaceship_id: PositiveInt
     customer_id: PositiveInt
     date_start: datetime
@@ -12,7 +22,7 @@ class BookingSchema(BaseModel):
     total_cost: PositiveFloat
 
     class Config:
-        orm_mode = True  # To allow compatibility with ORM models
+        from_attributes = True  # To allow compatibility with ORM models
 
     # Model-level validator to check date_start and date_end after all fields are initialized
     @model_validator(mode='after')
