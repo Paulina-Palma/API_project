@@ -1,8 +1,8 @@
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
 from project.database import get_db
-from project.schemas.bookings import BookingSchema
-from project.repositories.bookings import create, fetch_one, fetch_all, update_by_id, delete_by_id
+from project.schemas.bookings import BookingSchema, BookingCreateSchema
+from project.repositories.bookings import create, fetch_one, fetch_all, update_booking, delete_by_id
 
 router = APIRouter(
     prefix="/bookings",
@@ -11,7 +11,7 @@ router = APIRouter(
 
 
 @router.post("/", status_code=201)
-async def add(booking: BookingSchema, db: Session = Depends(get_db)):
+async def add_booking(booking: BookingCreateSchema, db: Session = Depends(get_db)):
     """Create a new booking."""
     new_booking = create(
         db=db,
@@ -25,14 +25,14 @@ async def add(booking: BookingSchema, db: Session = Depends(get_db)):
 
 
 @router.get("/")
-async def index(db: Session = Depends(get_db)):
+async def get_all(db: Session = Depends(get_db)):
     """Fetch all bookings."""
     bookings = fetch_all(db=db)
     return bookings
 
 
 @router.get("/{booking_id}", response_model=BookingSchema)
-async def get(booking_id: int, db: Session = Depends(get_db)):
+async def get_one_booking(booking_id: int, db: Session = Depends(get_db)):
     """Fetch a single booking by its ID."""
     booking = fetch_one(db=db, booking_id=booking_id)
     if not booking:
@@ -41,7 +41,7 @@ async def get(booking_id: int, db: Session = Depends(get_db)):
 
 
 @router.delete("/{booking_id}", status_code=204)
-async def delete(booking_id: int, db: Session = Depends(get_db)):
+async def delete_one(booking_id: int, db: Session = Depends(get_db)):
     """Delete a booking by its ID."""
     booking = delete_by_id(db=db, booking_id=booking_id)
     if not booking:
@@ -49,10 +49,19 @@ async def delete(booking_id: int, db: Session = Depends(get_db)):
     return {"message": "Booking deleted successfully"}
 
 
-@router.put("/{booking_id}", response_model=BookingSchema)
-async def update(booking_id: int, booking: BookingSchema, db: Session = Depends(get_db)):
-    """Update a booking by its ID."""
-    updated_booking = update_by_id(db=db, booking_id=booking_id, **booking.dict())
+# @router.put("/{booking_id}", response_model=BookingSchema)
+# async def update_booking_by_id(booking_id: int, booking: BookingCreateSchema, db: Session = Depends(get_db)):
+#     """Update a booking by its ID."""
+#     updated_booking_id = update_by_id(db=db, booking_id=booking_id, **booking.dict())
+#     if not updated_booking_id:
+#         raise HTTPException(status_code=404, detail="Booking not found")
+#     return updated_booking_id
+
+
+@router.put("/update/", response_model=BookingSchema)
+async def update_booking_generic(filter_field: str, filter_value: str, booking: BookingCreateSchema, db: Session = Depends(get_db)):
+    """Update a booking by any field."""
+    updated_booking = update_booking(db=db, filter_field=filter_field, filter_value=filter_value, update_data=booking.dict())
     if not updated_booking:
         raise HTTPException(status_code=404, detail="Booking not found")
     return updated_booking
