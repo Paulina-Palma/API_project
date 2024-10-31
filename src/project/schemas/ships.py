@@ -12,7 +12,7 @@ class ShipCreateSchema(BaseModel):
         from_attributes = True
 
 
-class ShipSchema(BaseModel):
+class ShipResponseSchema(BaseModel):
     id: PositiveInt
     name: str = Field(min_length=3, max_length=255)
     max_speed: PositiveFloat

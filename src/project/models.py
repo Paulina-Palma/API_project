@@ -1,20 +1,8 @@
-from sqlalchemy import Column, Integer, String, Float, Date, ForeignKey
+from sqlalchemy import Column, Integer, String, Float, Date, ForeignKey, Boolean
 from sqlalchemy.orm import relationship
-from project.database import Base
+from project.database import Base, engine
 
-
-class Customer(Base):
-    __tablename__ = "customers"
-
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, index=True)
-    address = Column(String, index=True)
-    phone = Column(String, index=True)
-    email = Column(String, index=True)
-    document_number = Column(String, unique=True, index=True)
-
-    # Add this relationship to bookings
-    bookings = relationship("Booking", back_populates="customer")
+Base.metadata.create_all(bind=engine)
 
 
 class Ship(Base):
@@ -30,6 +18,17 @@ class Ship(Base):
     bookings = relationship("Booking", back_populates="ship")
 
 
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True, index=True)
+    username = Column(String, unique=True, index=True)
+    email = Column(String, unique=True, index=True)
+    full_name = Column(String, nullable=True)
+    hashed_password = Column(String, nullable=False)
+    disabled = Column(Boolean, default=False)
+
+
 class Booking(Base):
     __tablename__ = "bookings"
 
@@ -42,3 +41,17 @@ class Booking(Base):
 
     customer = relationship("Customer", back_populates="bookings")
     ship = relationship("Ship", back_populates="bookings")
+
+
+class Customer(Base):
+    __tablename__ = "customers"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, index=True)
+    address = Column(String, index=True)
+    phone = Column(String, index=True)
+    email = Column(String, index=True)
+    document_number = Column(String, unique=True, index=True)
+
+    # Add this relationship to bookings
+    bookings = relationship("Booking", back_populates="customer")

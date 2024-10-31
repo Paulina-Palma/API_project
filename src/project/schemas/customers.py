@@ -13,7 +13,7 @@ class CustomerCreateSchema(BaseModel):
         from_attributes = True
 
 
-class CustomerSchema(BaseModel):
+class CustomerResponseSchema(BaseModel):
     id: PositiveInt
     name: str = Field(min_length=3, max_length=100)
     address: str = Field(min_length=3, max_length=100)
