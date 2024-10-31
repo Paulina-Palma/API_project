@@ -4,7 +4,12 @@ from project.models import Ship
 
 def create(db: Session, name: str, max_speed: float, distance: float, cost_per_day: float):
     """Creates a new ship record in the database."""
-    db_ship = Ship(name=name, max_speed=max_speed, distance=distance, cost_per_day=cost_per_day)
+    db_ship = Ship(
+        name=name,
+        max_speed=max_speed,
+        distance=distance,
+        cost_per_day=cost_per_day
+    )
     db.add(db_ship)
     db.commit()
     db.refresh(db_ship) # Refresh to get the updated state after insert

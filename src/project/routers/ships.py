@@ -3,7 +3,7 @@ from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 
 from project.database import get_db
-from project.schemas.ships import ShipSchema, ShipCreateSchema
+from project.schemas.ships import ShipResponseSchema, ShipCreateSchema
 from project.repositories.ships import create, update_by_id, update_all, fetch_one, fetch_all, delete_by_id
 
 router = APIRouter(
@@ -11,11 +11,13 @@ router = APIRouter(
     tags=['ships']
 )
 
-oauth_scheme = OAuth2PasswordBearer(tokenUrl='login')
+# tylko osoby autoryzowane mogą dodać statek (obecnie każdy token jest prawidłowy)
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl='login')
 
 
-@router.post("/", response_model=ShipSchema, status_code=201)
-async def add_ship(ship: ShipCreateSchema, db: Session = Depends(get_db), token: str = Depends(oauth_scheme)):
+@router.post("/", response_model=ShipResponseSchema, status_code=201)
+async def add_ship(ship: ShipCreateSchema, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
+    print(token)
     """Create a new ship."""
     new_ship = create(
         db=db,
@@ -27,14 +29,14 @@ async def add_ship(ship: ShipCreateSchema, db: Session = Depends(get_db), token:
     return new_ship  # Return the created ship
 
 
-@router.get("/", response_model=list[ShipSchema])
+@router.get("/", response_model=list[ShipResponseSchema])
 async def get_all_ships(db: Session = Depends(get_db)):
     """Fetch all ships."""
     ships = fetch_all(db=db)
     return ships  # Return all ships from the database
 
 
-@router.get('/{ship_id}', response_model=ShipSchema)
+@router.get('/{ship_id}', response_model=ShipResponseSchema)
 async def get_ship(ship_id: int, db: Session = Depends(get_db)):
     """Fetch a single ship by its ID."""
     ship = fetch_one(db=db, ship_id=ship_id)
@@ -43,7 +45,7 @@ async def get_ship(ship_id: int, db: Session = Depends(get_db)):
     return ship  # Return the ship if found
 
 
-@router.put('/{ship_id}', response_model=ShipSchema)
+@router.put('/{ship_id}', response_model=ShipResponseSchema)
 async def update_ship(ship_id: int, ship: ShipCreateSchema, db: Session = Depends(get_db)):
     """Update a ship by its ID."""
     updated_ship = update_by_id(db=db, ship_id=ship_id, **ship.dict())
@@ -53,7 +55,7 @@ async def update_ship(ship_id: int, ship: ShipCreateSchema, db: Session = Depend
 
 
 @router.put('/update_all', status_code=200)
-async def update_all_ships(ship: ShipSchema, db: Session = Depends(get_db)):
+async def update_all_ships(ship: ShipResponseSchema, db: Session = Depends(get_db)):
     """Update all ships with the same values."""
     updated_all_ships = update_all(db=db, **ship.dict())
     if not updated_all_ships:

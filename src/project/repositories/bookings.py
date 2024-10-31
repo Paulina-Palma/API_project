@@ -5,7 +5,13 @@ from project.models import Booking
 
 def create(db: Session, customer_id: int, spaceship_id: int, date_start: date, date_end: date, total_cost: float):
     """Create a new booking."""
-    db_booking = Booking(customer_id=customer_id, spaceship_id=spaceship_id, date_start=date_start, date_end=date_end, total_cost=total_cost)
+    db_booking = Booking(
+        customer_id=customer_id,
+        spaceship_id=spaceship_id,
+        date_start=date_start,
+        date_end=date_end,
+        total_cost=total_cost
+    )
     db.add(db_booking)
     db.commit()
     db.refresh(db_booking)

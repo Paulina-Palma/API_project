@@ -4,7 +4,13 @@ from project.models import Customer
 
 def create(db: Session, name: str, address: str, email: str, phone: str, document_number: str):
     """Create a new customer."""
-    db_customer = Customer(name=name, address=address, email=email, phone=phone, document_number=document_number)
+    db_customer = Customer(
+        name=name,
+        address=address,
+        email=email,
+        phone=phone,
+        document_number=document_number
+    )
     db.add(db_customer)
     db.commit()
     db.refresh(db_customer)
