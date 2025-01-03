@@ -4,12 +4,12 @@ This project is a RESTful API built using  **FastAPI**  for managing ships, cust
 
 ## 📋 Features
 
--   **CRUD operations**  for  **Customers**,  **Ships**, and  **Bookings**.
--   **Pydantic models**  for data validation.
--   **SQLAlchemy ORM**  for database interaction.
--   **PostgreSQL**  as the database.
--   **Alembic**  for database migrations (if applicable).
--   **Docker**  support for containerized deployment.
+-   **CRUD operations**  for  **Customers**,  **Ships**, and  **Bookings**
+-   **Pydantic models**  for data validation
+-   **SQLAlchemy ORM**  for database interaction
+-   **PostgreSQL**  as the database
+-   **Alembic**  for database migrations (if applicable)
+-   **Docker**  support for containerized deployment
 
 ## 📂 Project Structure
 
